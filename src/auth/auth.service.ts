@@ -118,14 +118,14 @@ export class AuthService {
     });
 
     const user = await this.prismaService.user.findUnique({
-      where: { id: payload.id,hashedRefreshToken: {not: null} },
+      where: { id: payload.id },
     });
     if (!user) {
       throw new BadRequestException("User not found");
     }
 
     await this.prismaService.user.update({
-      where: { id: user.id },
+      where: { id: user.id, hashedRefreshToken: { not: null } },
       data: { hashedRefreshToken: null },
     });
 

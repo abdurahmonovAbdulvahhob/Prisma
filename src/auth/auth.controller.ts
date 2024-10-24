@@ -16,7 +16,7 @@ import { Response } from "express";
 import { SignInDto } from "./dto";
 import { CookieGetter } from "../common/decorators/cookie_getter.decorator";
 import { AccessTokenGuard, RefreshTokenGuard } from "../common/guards";
-import { Public } from "../common/decorators";
+import { GetCurrentUser, GetCurrentUserId, Public } from "../common/decorators";
 
 @UseGuards(AccessTokenGuard)
 @Controller("auth")
@@ -45,6 +45,8 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @Post("signout")
   async signOut(
+    @GetCurrentUserId() userId: number,
+    @GetCurrentUser("refreshToken") refresh_token: string,
     @CookieGetter("refresh_token") refreshToken: string,
     @Res({ passthrough: true }) res: Response
   ) {
